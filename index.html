@@ -62,10 +62,10 @@
     background-repeat: no-repeat;
     background-position: center;
 }
-.numbers__item.numbers__item--jvari {background-image: url("https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/7209020c-bd63-4c94-9967-f7ef92b19d65/Mini.png?auto=format%2Ccompress");}
-.numbers__item.numbers__item--aguri {background-image: url("https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/78da8426-1663-4adb-a820-2d3ad2494e83/Minor.png?auto=format%2Ccompress");margin-right: 10px;}
-.numbers__item.numbers__item--guli {background-image: url("https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/1ceca0c8-1cd9-4ef5-a6b5-4dfaa6b979a1/Major.png?auto=format%2Ccompress");}
-.numbers__item.numbers__item--yvavi {background-image: url("https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/c2a6d99a-a008-4341-aa6e-dd9a09e0d3dd/Grand.png?auto=format%2Ccompress");margin-right: 10px;}
+.numbers__item.numbers__item--yvavi {background-image: url("https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/7209020c-bd63-4c94-9967-f7ef92b19d65/Mini.png?auto=format%2Ccompress"); margin-right: 10px;}
+.numbers__item.numbers__item--guli {background-image: url("https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/78da8426-1663-4adb-a820-2d3ad2494e83/Minor.png?auto=format%2Ccompress");}
+.numbers__item.numbers__item--aguri {background-image: url("https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/1ceca0c8-1cd9-4ef5-a6b5-4dfaa6b979a1/Major.png?auto=format%2Ccompress"); margin-right: 10px;}
+.numbers__item.numbers__item--jvari {background-image: url("https://images.takeshape.io/5da2b4d5-59f6-412a-82c3-f6a272b532be/dev/c2a6d99a-a008-4341-aa6e-dd9a09e0d3dd/Grand.png?auto=format%2Ccompress");}
 .container .numbers__item .numbers__item--icon {
     display: flex;
     align-items: center;
@@ -96,12 +96,17 @@
     display: inline-block;
     position: relative;
 }
-.jack>div {
+.jack.static {
+  margin-top: 5px !important;
+}
+.jack>div,
+.jack.static {
     display: inline-block;
     margin-top: -56px;
     font-size: 16px;
 }
-.jack>div>span {
+.jack>div>span,
+.jack.static {
     display: block;
     font-family: 'Noto Sans Ambassadori';
     font-weight: bold;
@@ -160,7 +165,8 @@
       border: solid 1px rgb(207, 22, 125, 0.4);
       padding-top: 2px;
     }
-    .jack>div {
+    .jack>div,
+    .jack.static {
     font-size: 12px;
 }
 .jackpot-logo-amb-desk {
@@ -192,7 +198,8 @@
     width: 159px;
     height: 41px;
     }
-    .jack>div {
+    .jack>div,
+    .jack.static {
     font-size: 14px;
 }
 }
@@ -217,14 +224,14 @@
                 <div class="numbers__item numbers__item--yvavi">
                     <div class="numbers__item-wrap">
                         <div class="number-box">
-                            <div id="wrapp3" class="jack"></div>
+                            <div id="wrapp0" class="jack"></div>
                         </div>
                     </div>
                 </div>
                 <div class="numbers__item numbers__item--guli">
                     <div class="numbers__item-wrap">
                         <div class="number-box">
-                            <div id="wrapp2" class="jack"></div>
+                            <div id="wrapp1" class="jack"></div>
                         </div>
                     </div>
                 </div>
@@ -234,14 +241,14 @@
                 <div class="numbers__item numbers__item--aguri">
                     <div class="numbers__item-wrap">
                         <div class="number-box">
-                            <div id="wrapp1" class="jack"></div>
+                            <div id="wrapp2" class="jack static">50.00</div>
                         </div>
                     </div>
                 </div>
                 <div class="numbers__item numbers__item--jvari">
                     <div class="numbers__item-wrap">
                         <div class="number-box">
-                            <div id="wrapp0" class="jack"></div>
+                            <div id="wrapp3" class="jack static">10.00</div>
                         </div>
                     </div>
                 </div>
@@ -268,28 +275,23 @@ function syncJackpots() {
         intervals.forEach(interval => clearInterval(interval));
         intervals = [];
 
-        const levelStats = data.jackpotInstancesStats.instanceStats[2].levelStats;
+        const instance = data.jackpotInstancesStats.instanceStats.find(stat => stat.instanceName === "Bell Link");
+        const levelStats = instance.levelStats;
 
         if (previousJackpots.length === 0) {
             previousJackpots = [
                 getCurrentValue(levelStats, 1),
                 getCurrentValue(levelStats, 2),
-                getCurrentValue(levelStats, 3),
-                getCurrentValue(levelStats, 4)
             ];
         } else {
             // Update previousJackpots with the latest data
             previousJackpots[0] = getCurrentValue(levelStats, 1);
             previousJackpots[1] = getCurrentValue(levelStats, 2);
-            previousJackpots[2] = getCurrentValue(levelStats, 3);
-            previousJackpots[3] = getCurrentValue(levelStats, 4);
         }
 
         const currentJackpots = [
             getCurrentValue(levelStats, 1),
             getCurrentValue(levelStats, 2),
-            getCurrentValue(levelStats, 3),
-            getCurrentValue(levelStats, 4)
         ];
         
         const diffs = currentJackpots.map((jackpot, index) => jackpot - previousJackpots[index]);
